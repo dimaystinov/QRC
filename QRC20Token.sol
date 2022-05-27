@@ -2,64 +2,44 @@ pragma solidity ^0.4.18;
 import './SafeMath.sol';
 
 
-/**
-    ZRC20Token Standard Token implementation
-*/
-contract ZRC20Token is SafeMath {
+contract QRC20Token is SafeMath {
     string public constant standard = 'Token 0.1';
-    uint8 public constant decimals = 8; // it's recommended to set decimals to 8 in ZHCASH
+    uint8 public constant decimals = 8; // it's recommended to set decimals to 8 in QTUM
 
     // you need change the following three values
-    string public constant name = 'ZRC TEST 3';
-    string public constant symbol = 'ZRC3';
+    string public constant name = 'QRC TEST';
+    string public constant symbol = 'QTC';
     //Default assumes totalSupply can't be over max (2^256 - 1).
     //you need multiply 10^decimals by your real total supply.
     uint256 public totalSupply = 10**9 * 10**uint256(decimals);
 
-    //-------------------------
-    uint256 public test =0;
-
-
-    //--------------------------
     mapping (address => uint256) public balanceOf;
-    
     mapping (address => mapping (address => uint256)) public allowance;
-
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 
-    function ZRC20Token(address _firstUser) public {
-        balanceOf[msg.sender] = totalSupply;
-        balanceOf[_firstUser] = 10**6 * 10**uint256(decimals);
-    }
+    uint256 storedData; // State variable
+    
+    constructor() public {
+      storedData = 10; 
+      balanceOf[msg.sender] = totalSupply;  
+   }
+
+   function setResult(uint256 new_value) public {
+       storedData = new_value;
+   }
+
+   function getResult() external view returns (uint256) {
+       return storedData;
+   }
+
 
     // validates an address - currently only checks that it isn't null
     modifier validAddress(address _address) {
         require(_address != 0x0);
         _;
     }
-//0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
-    function getMyAddress()  external view returns(address){
-        return msg.sender;
-    }
-
-    //----------------------------------------
-    
-    //Try send some data
-    function setTest(uint256 a)  public returns(uint256){
-        _setTest(a);
-        return test;
-    }
-    function getTest()  external view returns(uint256){
-        return test;
-    }
-
-    function _setTest(uint256 a)  internal returns(uint256){
-        test = a;
-        return test; 
-    }
-    //----------------------------------------
 
     function transfer(address _to, uint256 _value)
     public
